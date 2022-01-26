@@ -1,38 +1,9 @@
 import { Box, Button, Text, TextField, Image } from "@skynexui/components";
 import appConfig from "../config.json";
+import React from "react";
+import {useRouter} from "next/router";
+import Fundo from "../img/Fundo.png"
 
-
-function GlobalStyle() {
-    return (
-        <style global jsx>{`
-            * {
-                margin: 0;
-                padding: 0;
-                box-sizing: border-box;
-                list-style: none;
-            }
-            body {
-                font-family: "Open Sans", sans-serif;
-            }
-        
-            /* App fit Height */
-            html,
-            body,
-            #__next {
-                min-height: 100vh;
-                display: flex;
-                flex: 1;
-            }
-            #__next {
-                flex: 1;
-            }
-            #__next > * {
-                flex: 1;
-            }
-            /* ./App fit Height */
-        `}</style>
-    );
-}
 
 function Titulo(props) {
     console.log(props.children);
@@ -65,18 +36,21 @@ function Titulo(props) {
 // export default HomePage
 
 export default function PaginaInicial() {
-    const username = "joao-victor-dias";
+    //const username = "joao-victor-dias";
+    const [username, setUsername] = React.useState('joao-victor-dias');
+    const roteamento = useRouter();
+    
 
     return (
         <>
-            <GlobalStyle />
+            
             <Box
                 styleSheet={{
                     display: "flex",
                     alignItems: "center",
                     justifyContent: "center",
                     backgroundColor: appConfig.theme.colors.primary[600],
-                    backgroundImage:'url(https://img.wallpapersafari.com/desktop/1920/1080/41/38/Gs3jCL.png)',
+                    backgroundImage:`url(${Fundo.src})`,
                     backgroundRepeat: "no-repeat",
                     backgroundSize: "cover",
                     backgroundBlendMode: "multiply",
@@ -103,6 +77,12 @@ export default function PaginaInicial() {
                     {/* Formulário */}
                     <Box
                         as="form"
+                        onSubmit = {function (infosDoEvento) {
+                            infosDoEvento.preventDefault();
+                            console.log("Alguém submeteu o form")
+                            roteamento.push("/chat");
+                            //window.location.href = "/chat";
+                        }}
                         styleSheet={{
                             display: "flex",
                             flexDirection: "column",
@@ -118,22 +98,45 @@ export default function PaginaInicial() {
                             variant="body3"
                             styleSheet={{
                                 marginBottom: "32px",
-                                color: appConfig.theme.colors.neutrals[100],
+                                color: appConfig.theme.colors.neutrals[100]
                             }}
                         >
                             {appConfig.name}
                         </Text>
 
+                        {/* <input 
+                            type = "text"
+                            value= {username}
+                            onChange={function handler(event) {
+                                console.log('Usuário digitou', event.target.value);
+                                //onde ta o valor?
+                                const valor = event.target.value;
+                                //trocar o valor do usuario
+                                
+                                setUsername(valor);
+                            }}
+                        /> */}
+
                         <TextField
+                            
+                            value={username}                            
+                            onChange={function handler(event) {
+                                console.log('Usuário digitou', event.target.value);
+                                //onde ta o valor?
+                                const valor = event.target.value;                                                           
+                                //trocar o valor do usuario                                                            
+                                setUsername(valor.length > 2 ? `${valor}` : null);                                
+                            }}
                             fullWidth
                             placeholder="Username Github"
                             textFieldColors={{
                                 neutral: {
                                     textColor: appConfig.theme.colors.neutrals[100],
                                     mainColor: appConfig.theme.colors.neutrals[900],
-                                    mainColorHighlight: appConfig.theme.colors.primary[500],
-                                    backgroundColor: appConfig.theme.colors.neutrals[700]                                    
-                                },
+                                    mainColorHighlight: appConfig.theme.colors.primary[999],
+                                    backgroundColor: appConfig.theme.colors.neutrals[700],
+                                    
+                                }
                             }}
                         />
                         <Button
@@ -144,7 +147,7 @@ export default function PaginaInicial() {
                                 contrastColor: appConfig.theme.colors.neutrals["000"],
                                 mainColor: appConfig.theme.colors.primary[999],
                                 mainColorLight: appConfig.theme.colors.primary[400],
-                                mainColorStrong: appConfig.theme.colors.primary[600],
+                                mainColorStrong: appConfig.theme.colors.primary[800],
                             }}
                         />
                     </Box>
