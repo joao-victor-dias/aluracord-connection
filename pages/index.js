@@ -170,7 +170,7 @@ export default function PaginaInicial() {
                             styleSheet={{                                
                                 color: appConfig.theme.colors.neutrals[100],
                                 backgroundColor: '#000',
-                                padding: "4px 60px",
+                                padding: "2px 70px",
                                 borderRadius: "10px",                                                                                                                                                               
                             }}                                
                         >
