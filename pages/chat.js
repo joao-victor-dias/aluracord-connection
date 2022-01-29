@@ -21,6 +21,18 @@ function escutaMensagensEmTempoReal(adicionaMensagem) {
         .subscribe();
 }
 
+
+function DeletaMensagensEmTempoReal(deletaMensagem) {
+    return supabaseClient
+        .from('mensagens')
+        .on('DELETE', (respostaLive) => {
+            deletaMensagem(respostaLive.old);
+        })
+        .subscribe();
+}
+
+
+
 export default function ChatPage() {
    
     const roteamento = useRouter();
@@ -29,6 +41,8 @@ export default function ChatPage() {
     // console.log('usuarioLogado', usuarioLogado);
     const [mensagem, setMensagem] = React.useState('');
     const [listaDeMensagens, setListaDeMensagens] = React.useState([]);
+
+    ///
 
     
     React.useEffect(() => {
@@ -40,6 +54,7 @@ export default function ChatPage() {
                 console.log("Dados da consulta", data);
                 setListaDeMensagens(data);
             });
+           
         const subscription = escutaMensagensEmTempoReal((novaMensagem) =>{
             console.log('Nova mensagem:', novaMensagem);
             console.log('listaDeMensagens:', listaDeMensagens);
@@ -63,7 +78,7 @@ export default function ChatPage() {
         const mensagem = {
             //id: listaDeMensagens.length + 1,
             de: usuarioLogado,
-            texto: novaMensagem,
+            texto: novaMensagem.trim(),
         };
 
         supabaseClient
@@ -77,6 +92,23 @@ export default function ChatPage() {
             });
 
         setMensagem('');
+    }
+
+
+    function handleDeletaMensagem(event) {
+        const mensagemId = Number(event.target.dataset.id);
+        console.log('idmensagemapagada', mensagemId);
+
+        supabaseClient
+            .from('mensagens')
+            .delete()
+            .match({id: mensagemId})
+            .then(({data}) => {
+                const mensagemFiltradaDaLista = listaDeMensagens.filter((mensagemFiltrada) => {
+                    return mensagemFiltrada.id != data[0].id
+                })
+                setListaDeMensagens(mensagemFiltradaDaLista)
+            })
     }
 
 
@@ -122,7 +154,10 @@ export default function ChatPage() {
                         padding: '16px',
                     }}
                 >
-                    <MessageList mensagens={listaDeMensagens} />
+                    <MessageList 
+                        mensagens={listaDeMensagens}
+                        handleDeletaMensagem={handleDeletaMensagem} 
+                    />
                          
                     
                     <Box
@@ -174,7 +209,7 @@ export default function ChatPage() {
                             label="Enviar"
                             onClick={(event) => {
                                 event.preventDefault();
-                                handleNewMessage(mesagem);
+                                handleNovaMessage(mensagem);
                             }}
                             styleSheet={{
                                 minHeight: "34px",
@@ -230,6 +265,7 @@ function Header() {
 
 function MessageList(props) {
     console.log(props);
+    const handleDeletaMensagem = props.handleDeletaMensagem;
     
     return (
         <Box
@@ -288,26 +324,28 @@ function MessageList(props) {
                                 {" - "}
                                 {(new Date().toLocaleDateString())}
                             </Text>
+                            <Text
+                                onClick={handleDeletaMensagem}
+                                styleSheet ={{
+                                    fontSize: '10px',
+                                    fontWeght: 'bold',
+                                    marginLeft: 'auto',
+                                    color: '#FFF',
+                                    backgroundColor: 'rgba(0,0,0,0.5)',
+                                    width: '20px',
+                                    height: '20px',
+                                    borderRadius: '50%',
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    justifyContent: 'center',
+                                    cursor: 'pointer'
+                                }}
+                                tag="span"
+                                data-id = {mensagem.id}                            
+                            >
+                                X
+                            </Text>
                         </Box>
-
-                            {/* <Button
-                                type='submit'
-                                label='Apagar'
-                                // onClick={() => {
-                                //     handleApagarMensagem(mensagem.id);
-                                // }}
-                                styleSheet={{
-                                    padding: "4px",
-                                    border: "none",
-                                  }}
-                                  buttonColors={{
-                                    contrastColor: appConfig.theme.colors.neutrals["000"],
-                                    mainColor: appConfig.theme.colors.neutrals[700],
-                                    mainColorLight: appConfig.theme.colors.primary[700],
-                                    mainColorStrong: appConfig.theme.colors.primary[700],
-                                  }}
-
-                            /> */}
 
                         {mensagem.texto.startsWith(':sticker:')
                             ? (
