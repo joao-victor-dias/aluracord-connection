@@ -22,16 +22,6 @@ function escutaMensagensEmTempoReal(adicionaMensagem) {
 }
 
 
-function DeletaMensagensEmTempoReal(deletaMensagem) {
-    return supabaseClient
-        .from('mensagens')
-        .on('DELETE', (respostaLive) => {
-            deletaMensagem(respostaLive.old);
-        })
-        .subscribe();
-}
-
-
 
 export default function ChatPage() {
    
@@ -67,10 +57,8 @@ export default function ChatPage() {
                 ]
             });
         });
+
         
-        return () => {
-            subscription.unsubscribe();
-        }
     }, []);
 
     
@@ -188,7 +176,7 @@ export default function ChatPage() {
                                 resize: 'none',
                                 borderRadius: '5px',
                                 padding: '6px 8px',
-                                backgroundColor: appConfig.theme.colors.neutrals[800],
+                                backgroundColor: appConfig.theme.colors.neutrals[900],
                                 marginRight: '12px',
                                 color: appConfig.theme.colors.neutrals[200],
                                 
@@ -201,6 +189,8 @@ export default function ChatPage() {
                             onStickerClick = {(sticker) => {
                                 handleNovaMensagem (':sticker:' + sticker);
                             }}
+                            
+
                         />                       
                         
                         
@@ -271,7 +261,7 @@ function MessageList(props) {
         <Box
             tag="ul"
             styleSheet={{
-                overflow: 'scroll',
+                overflow: 'auto',
                 display: 'flex',
                 flexDirection: 'column-reverse',
                 flex: 1,
@@ -285,9 +275,12 @@ function MessageList(props) {
                         key={mensagem.id}
                         tag="li"
                         styleSheet={{
-                            borderRadius: '5px',
+                            border:'2px solid',
+                            borderColor: appConfig.theme.colors.primary[999], 
+                            borderRadius: '10px',
                             padding: '6px',
                             marginBottom: '12px',
+                            backgroundColor: appConfig.theme.colors.neutrals[800],
                             hover: {
                                 backgroundColor: appConfig.theme.colors.neutrals[700],
                             }
@@ -295,7 +288,7 @@ function MessageList(props) {
                     >
                         <Box
                             styleSheet={{
-                                marginBottom: '8px',
+                                marginBottom: '8px',                                
                             }}
                         >
                             
@@ -327,14 +320,14 @@ function MessageList(props) {
                             <Text
                                 onClick={handleDeletaMensagem}
                                 styleSheet ={{
-                                    fontSize: '10px',
+                                    fontSize: '13px',
                                     fontWeght: 'bold',
                                     marginLeft: 'auto',
-                                    color: '#FFF',
-                                    backgroundColor: 'rgba(0,0,0,0.5)',
+                                    color: appConfig.theme.colors.neutrals[100],
+                                    backgroundColor: appConfig.theme.colors.primary[999],
                                     width: '20px',
                                     height: '20px',
-                                    borderRadius: '50%',
+                                    borderRadius: '10%',
                                     display: 'flex',
                                     alignItems: 'center',
                                     justifyContent: 'center',

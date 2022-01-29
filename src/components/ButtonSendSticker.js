@@ -13,23 +13,25 @@ export function ButtonSendSticker(props) {
     >
       <Button
         styleSheet={{
-          borderRadius: '50%',
+          borderRadius: '100%',
           padding: '0 3px 0 0',
-          minWidth: '50px',
-          minHeight: '50px',
+          minWidth: '42px',
+          minHeight: '42px',
+          marginRight: '12px',
           fontSize: '20px',
           marginBottom: '8px',
           lineHeight: '0',
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
-          backgroundColor: appConfig.theme.colors.neutrals[300],
+          backgroundColor: appConfig.theme.colors.primary[800],
           filter: isOpen ? 'grayscale(0)' : 'grayscale(1)',
           hover: {
             filter: 'grayscale(0)',
+            backgroundColor: appConfig.theme.colors.primary[600]
           }
         }}
-        label="😋"
+        label="🤓"
         onClick={() => setOpenState(!isOpen)}
       />
       {isOpen && (
