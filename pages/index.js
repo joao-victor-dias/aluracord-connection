@@ -2,7 +2,8 @@ import { Box, Button, Text, TextField, Image } from "@skynexui/components";
 import appConfig from "../config.json";
 import React from "react";
 import {useRouter} from "next/router";
-import Fundo from "../img/Fundo.png"
+import Fundo from "../img/Fundo.png";
+import Perfil from "../img/Perfil.png"
 
 
 function Titulo(props) {
@@ -118,7 +119,7 @@ export default function PaginaInicial() {
                         />
                         <Button
                             type="submit"
-                            label="Entrar"
+                            label="Entrar"                            
                             fullWidth
                             buttonColors={{
                                 contrastColor: appConfig.theme.colors.neutrals["000"],
@@ -151,22 +152,29 @@ export default function PaginaInicial() {
                         <Image
                             styleSheet={{
                                 border:'2px solid',
+                                borderRadius:"10px",
                                 borderColor:'#000',
-                                borderRadius: "10%",
                                 marginBottom: "16px",
+                                maxWidth: '180px',
+                                width: '180px',
+                                height: '180px'
+
                             }}
-                            src={`https://github.com/${username}.png`}
+                            src={username ? `https://github.com/${username}.png` : `${Perfil.src}`}
+                            onError={function (event) {
+                                event.target.src = `${Perfil.src}` 
+                            }}
                         />                        
                         <Text                            
                             variant="body4"
                             styleSheet={{                                
                                 color: appConfig.theme.colors.neutrals[100],
                                 backgroundColor: '#000',
-                                padding: "3px 40px",
-                                borderRadius: "10px"                                                                  
+                                padding: "4px 60px",
+                                borderRadius: "10px",                                                                                                                                                               
                             }}                                
                         >
-                            {username}
+                            {username || "Não encontrado"}
                         </Text>                       
                     </Box>
                     {/* Photo Area */}
