@@ -68,10 +68,14 @@ export default function PaginaInicial() {
                         width: "100%",
                         maxWidth: "700px",
                         borderRadius: "5px",
+                        border: "3px solid",
+                        borderColor:"#000",
                         padding: "32px",
                         margin: "16px",
                         boxShadow: "0 2px 10px 0 rgb(0 0 0 / 20%)",
-                        backgroundColor: appConfig.theme.colors.neutrals[800],
+                        backgroundColor: 'rgba( 0, 0, 212, 0.15 )',
+                        //backgroundColor: appConfig.theme.colors.neutrals[800],
+                        backdropFilter: 'blur( 1px )'
                     }}
                 >
                     {/* Formulário */}
@@ -134,7 +138,7 @@ export default function PaginaInicial() {
                                     textColor: appConfig.theme.colors.neutrals[100],
                                     mainColor: appConfig.theme.colors.neutrals[900],
                                     mainColorHighlight: appConfig.theme.colors.primary[999],
-                                    backgroundColor: appConfig.theme.colors.neutrals[700],
+                                    backgroundColor: 'rgba( 0, 0, 0, 0.80 )',
                                     
                                 }
                             }}
@@ -148,6 +152,7 @@ export default function PaginaInicial() {
                                 mainColor: appConfig.theme.colors.primary[999],
                                 mainColorLight: appConfig.theme.colors.primary[400],
                                 mainColorStrong: appConfig.theme.colors.primary[800],
+                                
                             }}
                         />
                     </Box>
@@ -162,9 +167,9 @@ export default function PaginaInicial() {
 
                             maxWidth: "200px",
                             padding: "16px",
-                            backgroundColor: appConfig.theme.colors.neutrals[800],
+                            backgroundColor: 'rgba( 15, 0, 111, 0.90 )',
                             border: "2px solid",
-                            borderColor: appConfig.theme.colors.neutrals[800],
+                            borderColor: '#000',
                             borderRadius: "10px",
                             flex: 1,
                             minHeight: "240px",
@@ -172,6 +177,8 @@ export default function PaginaInicial() {
                     >
                         <Image
                             styleSheet={{
+                                border:'2px solid',
+                                borderColor:'#000',
                                 borderRadius: "10%",
                                 marginBottom: "16px",
                             }}
@@ -181,7 +188,7 @@ export default function PaginaInicial() {
                             variant="body4"
                             styleSheet={{                                
                                 color: appConfig.theme.colors.neutrals[100],
-                                backgroundColor: appConfig.theme.colors.neutrals[700],
+                                backgroundColor: '#000',
                                 padding: "3px 40px",
                                 borderRadius: "10px"                                                                  
                             }}                                
