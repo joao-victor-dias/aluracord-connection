@@ -2,39 +2,85 @@ import { Box, Text, TextField, Image, Button } from '@skynexui/components';
 import React from 'react';
 import appConfig from '../config.json';
 import Fundo from "../img/Fundo.png"
+import { useRouter } from 'next/router';
+import { createClient } from '@supabase/supabase-js'
+import {ButtonSendSticker} from '../src/components/ButtonSendSticker'
+
+
+const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoiYW5vbiIsImlhdCI6MTY0MzMzMDg0NiwiZXhwIjoxOTU4OTA2ODQ2fQ.1QTO5pDPgrcfDcL_l_f7sgVZ_cIVTIlst9NK3Joz7yc'
+const SUPABASE_URL = 'https://vmdamhclnjqbcdawumua.supabase.co';
+const supabaseClient = createClient(SUPABASE_URL,SUPABASE_ANON_KEY);
+
+
+function escutaMensagensEmTempoReal(adicionaMensagem) {
+    return supabaseClient
+        .from('mensagens')
+        .on('INSERT', (respostaLive) => {
+            adicionaMensagem(respostaLive.new);
+        })
+        .subscribe();
+}
 
 export default function ChatPage() {
-    // Sua lógica vai aqui
+   
+    const roteamento = useRouter();
+    const usuarioLogado = roteamento.query.username;
+    // console.log('roteamento.query',roteamento.query);
+    // console.log('usuarioLogado', usuarioLogado);
     const [mensagem, setMensagem] = React.useState('');
     const [listaDeMensagens, setListaDeMensagens] = React.useState([]);
 
-    /*
-    // Usuário
-    - Usuário digita no campo textarea
-    - Aperta enter para enviar
-    - Tem que adicionar o texto na listagem
     
-    // Dev
-    - [X] Campo criado
-    - [X] Vamos usar o onChange usa o useState (ter if pra caso seja enter pra limpar a variavel)
-    - [X] Lista de mensagens 
-    */
+    React.useEffect(() => {
+        supabaseClient
+            .from('mensagens')
+            .select('*')
+            .order('id',{ascending: false})
+            .then(({data}) => {
+                console.log("Dados da consulta", data);
+                setListaDeMensagens(data);
+            });
+        const subscription = escutaMensagensEmTempoReal((novaMensagem) =>{
+            console.log('Nova mensagem:', novaMensagem);
+            console.log('listaDeMensagens:', listaDeMensagens);
+
+            setListaDeMensagens ((valorAtualDaLista) => {
+                console.log('valorAtuaDaLista', valorAtualDaLista);
+                return [
+                    novaMensagem,
+                    ...valorAtualDaLista,
+                ]
+            });
+        });
+        
+        return () => {
+            subscription.unsubscribe();
+        }
+    }, []);
+
+    
     function handleNovaMensagem(novaMensagem) {
         const mensagem = {
-            id: listaDeMensagens.length + 1,
-            de: 'vanessametonini',
+            //id: listaDeMensagens.length + 1,
+            de: usuarioLogado,
             texto: novaMensagem,
         };
 
-        setListaDeMensagens([
-            mensagem,
-            ...listaDeMensagens,
-        ]);
+        supabaseClient
+            .from('mensagens')
+            .insert ([
+                mensagem
+            ])
+            .then(({data})=> {
+                console.log('Criando mensagem: ', data);
+                
+            });
+
         setMensagem('');
     }
 
 
-    // ./Sua lógica vai aqui
+
     return (
         <Box
             styleSheet={{
@@ -71,24 +117,20 @@ export default function ChatPage() {
                         backgroundColor: appConfig.theme.colors.neutrals[600],
                         flexDirection: 'column',
                         borderRadius: '5px',
-                        border: "2px solid",
+                        border: "4px solid",
                         borderColor: appConfig.theme.colors.primary[999],
                         padding: '16px',
                     }}
                 >
                     <MessageList mensagens={listaDeMensagens} />
-                    {/* {listaDeMensagens.map((mensagemAtual) => {
-                        return (
-                            <li key={mensagemAtual.id}>
-                                {mensagemAtual.de}: {mensagemAtual.texto}
-                            </li>
-                        )
-                    })} */}
+                         
+                    
                     <Box
                         as="form"
                         styleSheet={{
                             display: 'flex',
-                            alignItems: 'center',
+                            alignItems: 'start',
+                            justifyContent: "center"
                         }}
                     >
                         <TextField
@@ -107,38 +149,44 @@ export default function ChatPage() {
                             type="textarea"
                             styleSheet={{
                                 width: '100%',
-                                //border: '0',
-                                border: "2px solid",
-                                borderColor: appConfig.theme.colors.primary[999],
-                                   
+                                border: '0',
                                 resize: 'none',
                                 borderRadius: '5px',
                                 padding: '6px 8px',
                                 backgroundColor: appConfig.theme.colors.neutrals[800],
                                 marginRight: '12px',
                                 color: appConfig.theme.colors.neutrals[200],
-                            }}
-                        />
-                        
-                        
-                        {/* enviar */}
-                        <Button 
-                            onClick={(event) => {
-                                event.preventDefault();
-                                handleNovaMensagem(mensagem);
-                            }}                           
-                            buttonColors={{
-                                contrastColor: appConfig.theme.colors.neutrals["000"],
-                                mainColor: appConfig.theme.colors.green['100'],
-                                mainColorLight: appConfig.theme.colors.green['000'],
-                                mainColorStrong: appConfig.theme.colors.green['000']
                                 
                             }}                            
-                            label='Enviar'
-                            
                         />
 
+                        {/* CallBack */}
 
+                        <ButtonSendSticker
+                            onStickerClick = {(sticker) => {
+                                handleNovaMensagem (':sticker:' + sticker);
+                            }}
+                        />                       
+                        
+                        
+                        <Button
+                            type="submit"
+                            label="Enviar"
+                            onClick={(event) => {
+                                event.preventDefault();
+                                handleNewMessage(mesagem);
+                            }}
+                            styleSheet={{
+                                minHeight: "34px",
+                                padding: "12px 12px",
+                            }}
+                            buttonColors={{
+                                contrastColor: appConfig.theme.colors.neutrals["000"],
+                                mainColor: appConfig.theme.colors.primary[800],
+                                mainColorLight: appConfig.theme.colors.primary[900],
+                                mainColorStrong: appConfig.theme.colors.primary[600],
+                            }}
+                        />
 
                     </Box>
                 </Box>
@@ -147,10 +195,18 @@ export default function ChatPage() {
     )
 }
 
+
+
 function Header() {
     return (
         <>
-            <Box styleSheet={{ width: '100%', marginBottom: '16px', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }} >
+            <Box styleSheet={{ 
+                    width: '100%',
+                    marginBottom: '16px',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'space-between'
+                }} >
                 <Text variant='heading3'>
                     Chat
                 </Text>
@@ -171,8 +227,10 @@ function Header() {
     )
 }
 
+
 function MessageList(props) {
     console.log(props);
+    
     return (
         <Box
             tag="ul"
@@ -204,34 +262,63 @@ function MessageList(props) {
                                 marginBottom: '8px',
                             }}
                         >
+                            
                             <Image
                                 styleSheet={{
-                                    width: '20px',
-                                    height: '20px',
-                                    borderRadius: '50%',
-                                    display: 'inline-block',
-                                    marginRight: '8px',
+                                width: '20px',
+                                height: '20px',
+                                borderRadius: '50%',
+                                display: 'inline-block',
+                                marginRight: '8px',
                                 }}
-                                src={`https://github.com/vanessametonini.png`}
+                                src={`https://github.com/${mensagem.de}.png`}
                             />
                             <Text tag="strong">
                                 {mensagem.de}
                             </Text>
                             <Text
                                 styleSheet={{
-                                    fontSize: '10px',
+                                    fontSize: '12px',
                                     marginLeft: '8px',
                                     color: appConfig.theme.colors.neutrals[300],
                                 }}
                                 tag="span"
                             >
+                                {(new Date().toLocaleTimeString())} 
+                                {" - "}
                                 {(new Date().toLocaleDateString())}
                             </Text>
                         </Box>
-                        {mensagem.texto}
+
+                            {/* <Button
+                                type='submit'
+                                label='Apagar'
+                                // onClick={() => {
+                                //     handleApagarMensagem(mensagem.id);
+                                // }}
+                                styleSheet={{
+                                    padding: "4px",
+                                    border: "none",
+                                  }}
+                                  buttonColors={{
+                                    contrastColor: appConfig.theme.colors.neutrals["000"],
+                                    mainColor: appConfig.theme.colors.neutrals[700],
+                                    mainColorLight: appConfig.theme.colors.primary[700],
+                                    mainColorStrong: appConfig.theme.colors.primary[700],
+                                  }}
+
+                            /> */}
+
+                        {mensagem.texto.startsWith(':sticker:')
+                            ? (
+                                <Image src={mensagem.texto.replace(':sticker:', '')} />
+                            )
+                            : (
+                                mensagem.texto
+                            )}
                     </Text>
                 );
             })}
         </Box>
     )
-}
+} 
