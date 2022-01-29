@@ -144,7 +144,8 @@ export default function ChatPage() {
                 >
                     <MessageList 
                         mensagens={listaDeMensagens}
-                        handleDeletaMensagem={handleDeletaMensagem} 
+                        handleDeletaMensagem={handleDeletaMensagem}
+                        
                     />
                          
                     
@@ -197,10 +198,7 @@ export default function ChatPage() {
                         <Button
                             type="submit"
                             label="Enviar"
-                            onClick={(event) => {
-                                event.preventDefault();
-                                handleNovaMessage(mensagem);
-                            }}
+                            onClick={() => handleNovaMensagem(mensagem)}
                             styleSheet={{
                                 minHeight: "34px",
                                 padding: "12px 12px",
