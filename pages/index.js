@@ -22,22 +22,9 @@ function Titulo(props) {
     );
 }
 
-// //componente react
-// function PaginaInicial() {
-//     return(
-//         <div>
-//             <GlobalStyle/>
-//             <Titulo tag="h1">Boas vindas de volta!</Titulo>
-//             <h2>Discord - Alura Matrix</h2>
-//         </div>
-//     )
-// }
-
-// export default HomePage
-
 export default function PaginaInicial() {
-    //const username = "joao-victor-dias";
-    const [username, setUsername] = React.useState('joao-victor-dias');
+    
+    const [username, setUsername] = React.useState('');
     const roteamento = useRouter();
     
 
@@ -73,8 +60,7 @@ export default function PaginaInicial() {
                         padding: "32px",
                         margin: "16px",
                         boxShadow: "0 2px 10px 0 rgb(0 0 0 / 20%)",
-                        backgroundColor: 'rgba( 0, 0, 212, 0.15 )',
-                        //backgroundColor: appConfig.theme.colors.neutrals[800],
+                        backgroundColor: 'rgba( 32, 21, 168, 0.15 )',
                         backdropFilter: 'blur( 1px )'
                     }}
                 >
@@ -85,7 +71,7 @@ export default function PaginaInicial() {
                             infosDoEvento.preventDefault();
                             console.log("Alguém submeteu o form")
                             roteamento.push(`/chat?username=${username}`);
-                            //window.location.href = "/chat";
+                            
                         }}
                         styleSheet={{
                             display: "flex",
@@ -107,19 +93,6 @@ export default function PaginaInicial() {
                         >
                             {appConfig.name}
                         </Text>
-
-                        {/* <input 
-                            type = "text"
-                            value= {username}
-                            onChange={function handler(event) {
-                                console.log('Usuário digitou', event.target.value);
-                                //onde ta o valor?
-                                const valor = event.target.value;
-                                //trocar o valor do usuario
-                                
-                                setUsername(valor);
-                            }}
-                        /> */}
 
                         <TextField
                             
@@ -149,7 +122,7 @@ export default function PaginaInicial() {
                             fullWidth
                             buttonColors={{
                                 contrastColor: appConfig.theme.colors.neutrals["000"],
-                                mainColor: appConfig.theme.colors.primary[999],
+                                mainColor: appConfig.theme.colors.primary[1000],
                                 mainColorLight: appConfig.theme.colors.primary[400],
                                 mainColorStrong: appConfig.theme.colors.primary[800],
                                 
@@ -167,7 +140,7 @@ export default function PaginaInicial() {
 
                             maxWidth: "200px",
                             padding: "16px",
-                            backgroundColor: 'rgba( 15, 0, 111, 0.90 )',
+                            backgroundColor: 'rgba( 32, 21, 168, 0.80 )',
                             border: "2px solid",
                             borderColor: '#000',
                             borderRadius: "10px",

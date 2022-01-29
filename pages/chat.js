@@ -22,19 +22,13 @@ function escutaMensagensEmTempoReal(adicionaMensagem) {
 }
 
 
-
 export default function ChatPage() {
    
     const roteamento = useRouter();
     const usuarioLogado = roteamento.query.username;
-    // console.log('roteamento.query',roteamento.query);
-    // console.log('usuarioLogado', usuarioLogado);
     const [mensagem, setMensagem] = React.useState('');
     const [listaDeMensagens, setListaDeMensagens] = React.useState([]);
 
-    ///
-
-    
     React.useEffect(() => {
         supabaseClient
             .from('mensagens')
@@ -57,8 +51,9 @@ export default function ChatPage() {
                 ]
             });
         });
-
-        
+        return () => {
+            subscription.unsubscribe();
+        }        
     }, []);
 
     
@@ -98,9 +93,8 @@ export default function ChatPage() {
                 setListaDeMensagens(mensagemFiltradaDaLista)
             })
     }
-
-
-
+    
+    
     return (
         <Box
             styleSheet={{
@@ -189,10 +183,9 @@ export default function ChatPage() {
                         <ButtonSendSticker
                             onStickerClick = {(sticker) => {
                                 handleNovaMensagem (':sticker:' + sticker);
-                            }}
-                            
+                            }}                            
 
-                        />                       
+                        />      
                         
                         
                         <Button
@@ -205,9 +198,9 @@ export default function ChatPage() {
                             }}
                             buttonColors={{
                                 contrastColor: appConfig.theme.colors.neutrals["000"],
-                                mainColor: appConfig.theme.colors.primary[800],
+                                mainColor: appConfig.theme.colors.primary[999],
                                 mainColorLight: appConfig.theme.colors.primary[900],
-                                mainColorStrong: appConfig.theme.colors.primary[600],
+                                mainColorStrong: appConfig.theme.colors.primary[800],
                             }}
                         />
 
@@ -217,7 +210,6 @@ export default function ChatPage() {
         </Box>
     )
 }
-
 
 
 function Header() {
@@ -234,14 +226,12 @@ function Header() {
                     Chat
                 </Text>
                 <Button
-                    //variant='tertiary'
                     buttonColors={{
                         contrastColor: appConfig.theme.colors.neutrals["000"],
                         mainColor: appConfig.theme.colors.primary[999],
                         mainColorLight: appConfig.theme.colors.primary[400],
                         mainColorStrong: appConfig.theme.colors.primary[800],
                     }}
-                    //colorVariant='neutral'
                     label='Logout'
                     href="/"
                 />
