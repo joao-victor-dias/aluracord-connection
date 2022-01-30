@@ -34,7 +34,5 @@ Projeto desenvolvido durante a Imersão React da Alura. Trata-se de um chat real
   ```
   yarn dev
   ```
-
-![](/home/joao-victor/Área de Trabalho/aluraCord-Att/aluracord-connection/img/tela1.png)
-
-![](/home/joao-victor/Área de Trabalho/aluraCord-Att/aluracord-connection/img/tela2.png)
+<img src="./img/tela1.png"/>
+<img src="./img/tela2.png"/>
